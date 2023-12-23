@@ -1,69 +1,49 @@
-import headPath from '../assets/body-parts/head.svg';
-import bodyPath from '../assets/body-parts/bodies/muscle-shirt.svg';
-import eyePath from '../assets/body-parts/eyes/nice.svg';
-import mouth from '../assets/body-parts/mouths/open-smile.svg';
-import glasses from '../assets/body-parts/glasses/plain.svg';
-import eyebrows from '../assets/body-parts/eyebrows/angry.svg';
-import heir from '../assets/body-parts/heirs/crazy.svg';
-import pet from '../assets/pets/cat.svg';
-
-import ImageLoader from './image-loader';
 import AnchorPoint from './anchor-point';
 
 import { Coordinates } from '../types/coordinates';
+import { Character } from '../types/character';
 
 
 export default class CharacterDrawer {
-    drawCharacter(ctx: CanvasRenderingContext2D) {
-        this.drawCharacterPart(ctx, bodyPath, this.bodyTopPosition);
-        this.drawCharacterPart(ctx, headPath, this.headTopPosition);
-        this.drawCharacterPart(ctx, heir, this.heirTopPosition);
-        this.drawCharacterPart(ctx, eyebrows, this.eyebrowTopPosition);
-        this.drawCharacterPart(ctx, eyePath, this.eyeTopPosition);
-        this.drawCharacterPart(ctx, glasses, this.glassTopPosition);
-        this.drawCharacterPart(ctx, mouth, this.mouthTopPosition);
-        this.drawPet(ctx, pet)
+    drawCharacter(ctx: CanvasRenderingContext2D, character: Character<HTMLImageElement>) {
+        this.drawCharacterPart(ctx, character.body, this.bodyTopPosition);
+        this.drawCharacterPart(ctx, character.head, this.headTopPosition);
+        this.drawCharacterPart(ctx, character.eyebrow, this.eyebrowTopPosition);
+        this.drawCharacterPart(ctx, character.eye, this.eyeTopPosition);
+        this.drawCharacterPart(ctx, character.glass, this.glassTopPosition);
+        this.drawCharacterPart(ctx, character.mouth, this.mouthTopPosition);
+        this.drawCharacterPart(ctx, character.heir, this.heirTopPosition);
+        this.drawPet(ctx, character.pet)
     }
 
     private headTopPosition = 125;
     private heirTopPosition = 58;
-    private mouthTopPosition = 225;
+    private mouthTopPosition = 175;
     private glassTopPosition = 194;
     private eyeTopPosition = 200;
     private eyebrowTopPosition = 176;
     private bodyTopPosition = 297;
 
-    private drawCharacterPart(ctx: CanvasRenderingContext2D, imagePath: string, topPosition: number) {
-        new ImageLoader().loadImage(imagePath)
-            .then((image) => {
-                const position: Coordinates = {
-                    x: ctx.canvas.clientWidth / 2,
-                    y: topPosition
-                };
+    private drawCharacterPart(ctx: CanvasRenderingContext2D, image: HTMLImageElement, topPosition: number) {
+        const position: Coordinates = {
+            x: ctx.canvas.clientWidth / 2,
+            y: topPosition
+        };
 
-                const { x, y } = new AnchorPoint(image.width, image.height).centerTop(position)
+        const { x, y } = new AnchorPoint(image.width, image.height).centerTop(position)
 
-                ctx.drawImage(image, x, y);
-            }).catch((message) => {
-                console.error(message);
-            })
+        ctx.drawImage(image, x, y);
     }
 
-    private drawPet(ctx: CanvasRenderingContext2D, imagePath: string) {
-        new ImageLoader().loadImage(imagePath)
-            .then((image) => {
-                const position: Coordinates = {
-                    x: 0,
-                    y: ctx.canvas.height
-                };
+    private drawPet(ctx: CanvasRenderingContext2D, image: HTMLImageElement) {
+        const borderOut = 100;
+        const position: Coordinates = {
+            x: 0,
+            y: ctx.canvas.height + borderOut
+        };
 
-                image.style.transform = 'rotate(-30deg)';
-                
-                const { x, y } = new AnchorPoint(image.width, image.height).leftBottom(position)
+        const { x, y } = new AnchorPoint(image.width, image.height).leftBottom(position)
 
-                ctx.drawImage(image, x, y);
-            }).catch((message) => {
-                console.error(message);
-            })
+        ctx.drawImage(image, x, y);
     }
 }
