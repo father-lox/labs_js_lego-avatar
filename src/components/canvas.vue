@@ -16,9 +16,17 @@ export default {
 </script>
 
 <template>
-  <canvas height="440" width="440" ref="avatarCanvas"></canvas>
+  <canvas class="avatar" height="440" width="440" ref="avatarCanvas"></canvas>
   <button>Download</button>
   <button>Refresh</button>
 </template>
 
-<style scoped></style>
+<style scoped>
+.avatar {
+  aspect-ratio: 1 / 1;
+  border-radius: 25px;
+  box-sizing: content-box;
+  border: 6px solid #383434;
+}
+
+</style>
