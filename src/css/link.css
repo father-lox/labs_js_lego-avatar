@@ -1,0 +1,15 @@
+.link {
+    font-weight: 500;
+    color: var(--color-pan-purple);
+    text-decoration: inherit;
+}
+
+.link:hover {
+    color: var(--color-secret-of-mana);
+}
+
+@media (prefers-color-scheme: light) {
+    .link:hover {
+        color: var(--color-orchid);
+    }
+}
