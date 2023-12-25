@@ -1,7 +1,9 @@
 <script lang="ts">
 import CharacterDrawer from '../code/character-drawer';
 import CharacterBuilder from '../code/character-builder';
+import BackgroundFiller from '../code/background-filler';
 import { Character } from '../types/character';
+import getRandomArrayElement from '../code/get-random-array-element';
 
 export default {
 	data() {
@@ -9,7 +11,8 @@ export default {
 			avatarContext: null as (CanvasRenderingContext2D | null),
 			character: null as (Character<HTMLImageElement> | null),
 			characterBuilder: new CharacterBuilder(),
-			characterDrawer: new CharacterDrawer()
+			characterDrawer: new CharacterDrawer(),
+			backgroundFiller: new BackgroundFiller(),
 		}
 	},
 
@@ -20,9 +23,23 @@ export default {
 					this.character = character;
 
 					this.avatarContext.clearRect(0, 0, this.avatarContext.canvas.width, this.avatarContext.canvas.height);
+					this.setRandomBackground();
 					this.characterDrawer.drawCharacter(this.avatarContext, character);
 				}
 			});
+		},
+
+		setRandomBackground() {
+			const backgrounds = [
+				this.backgroundFiller.fillCirclePattern.bind(this.backgroundFiller),
+				this.backgroundFiller.fillBoom.bind(this.backgroundFiller),
+				this.backgroundFiller.fillSolid.bind(this.backgroundFiller)
+			];
+
+			if (this.avatarContext) {
+				getRandomArrayElement(backgrounds)(this.avatarContext);
+
+			}
 		},
 
 		saveImage() {
