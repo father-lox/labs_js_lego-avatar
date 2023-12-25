@@ -1,4 +1,5 @@
 import AnchorPoint from './anchor-point';
+import convertDegreesToRadians from './convert-degrees-to-radians';
 
 import { Coordinates } from '../types/coordinates';
 import { Character } from '../types/character';
@@ -36,14 +37,24 @@ export default class CharacterDrawer {
     }
 
     private drawPet(ctx: CanvasRenderingContext2D, image: HTMLImageElement) {
-        const borderOut = 100;
+        ctx.save();
+        const borderOutX = 66;
+        const borderOutY = 100;
         const position: Coordinates = {
-            x: 0,
-            y: ctx.canvas.height + borderOut
+            x: -borderOutX,
+            y: ctx.canvas.height + borderOutY
         };
 
-        const { x, y } = new AnchorPoint(image.width, image.height).leftBottom(position)
-
-        ctx.drawImage(image, x, y);
+        const { x: imagePositionX, y: imagePositionY  } = new AnchorPoint(image.width, image.height).leftBottom(position)
+        
+        const globalImageCenterXCoordinate = imagePositionX + image.width / 2; 
+        const globalImageCenterYCoordinate = imagePositionY + image.height / 2; 
+        
+        ctx.translate(globalImageCenterXCoordinate, globalImageCenterYCoordinate); // move canvas to image center
+        ctx.rotate(convertDegreesToRadians(-15)); // rotate
+        ctx.translate(-globalImageCenterXCoordinate, -globalImageCenterYCoordinate); // reset canvas position
+        
+        ctx.drawImage(image, imagePositionX, imagePositionY);
+        ctx.restore();
     }
 }
