@@ -7,8 +7,8 @@ import { Character } from '../types/character';
 
 export default class CharacterDrawer {
     drawCharacter(ctx: CanvasRenderingContext2D, character: Character<HTMLImageElement>) {
-        this.drawCharacterPart(ctx, character.body, this.bodyTopPosition);
         this.drawCharacterPart(ctx, character.head, this.headTopPosition);
+        this.drawCharacterPart(ctx, character.body, this.bodyTopPosition);
         this.drawCharacterPart(ctx, character.eyebrow, this.eyebrowTopPosition);
         this.drawCharacterPart(ctx, character.eye, this.eyeTopPosition);
         this.drawCharacterPart(ctx, character.glass, this.glassTopPosition);
