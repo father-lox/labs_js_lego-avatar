@@ -30,3 +30,9 @@
 	height: 18rem;
 	fill: #383434;
 }
+
+.button_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
