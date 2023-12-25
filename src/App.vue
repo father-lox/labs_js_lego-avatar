@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Canvas from './components/canvas.vue'
+import Avatar from './components/avatar.vue'
 </script>
 
 <template>
-  <Canvas></Canvas>
+  <Avatar></Avatar>
 </template>
 
 <style scoped>
