@@ -1,6 +1,17 @@
 import getRandomArrayElement from "./get-random-array-element";
 
 export default class BackgroundFiller {
+    fillCirclePattern(ctx: CanvasRenderingContext2D) {
+        const colors = [
+            [this.colorWayBeyondTheBlue, this.colorMilitantVegan],
+            [this.colorFerocious, this.colorLemonTart],
+        ];
+        const countCircles = 4;
+
+        this.drawColorPallet(ctx, colors);
+        this.drawCirclePattern(ctx, 32.5,'rgba(255, 255, 255, 0.2)', countCircles, countCircles);
+    }
+
     fillBoom(ctx: CanvasRenderingContext2D) {
         this.fillSolid(ctx, this.colorCandyGrapeFizz);
         this.drawBoom(ctx);
@@ -27,6 +38,52 @@ export default class BackgroundFiller {
         ctx.lineWidth = 7;
         ctx.fill(boomPath);
         ctx.stroke(boomPath);
+    }
+
+    private drawColorPallet(ctx: CanvasRenderingContext2D, colors: string[][]) {
+        let positionX = 0;
+        let positionY = 0;
+        const canvasHeight = ctx.canvas.height;
+        const canvasWidth = ctx.canvas.width;
+        const heightFactor = canvasHeight / colors.length;
+
+        colors.forEach((colorsInRow) => {
+            const widthFactor = canvasWidth / colorsInRow.length;
+
+            colorsInRow.forEach((color) => {
+                ctx.fillStyle = color;
+                ctx.fillRect(positionX, positionY, widthFactor, heightFactor);
+                positionX += widthFactor;
+            });
+
+            positionX = 0;
+            positionY += heightFactor;
+        })
+    }
+
+    private drawCirclePattern(ctx: CanvasRenderingContext2D, radius: number, color: string, countInRow: number, countInColumn: number) {
+        let positionY = 0;
+        const diameter = radius * 2;
+        const canvasWidth = ctx.canvas.width;
+        const canvasHeight = ctx.canvas.height;
+        const spaceBetweenHorizon = (canvasWidth - diameter * countInRow) / countInRow;
+        const spaceBetweenVertical = (canvasHeight - diameter * countInColumn) / countInColumn;
+
+        ctx.fillStyle = color;
+
+        for (let columnIndex = 0; columnIndex < countInColumn; columnIndex++) {
+            let positionX = 0;
+
+            for (let rowIndex = 0; rowIndex < countInRow; rowIndex++) {
+                ctx.beginPath();
+                ctx.arc(positionX + (diameter + spaceBetweenHorizon) / 2, positionY + (diameter + spaceBetweenVertical) / 2, radius, 0, Math.PI * 2);
+                ctx.fill();
+    
+                positionX += diameter + spaceBetweenHorizon;
+            }
+
+            positionY += diameter + spaceBetweenVertical;
+        }
     }
 
     private colorFruityLicious: string = '#FC8F8F' //Pink
