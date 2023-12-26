@@ -4,7 +4,7 @@ import CharacterBuilder from '../code/character-builder';
 import BackgroundDrawer from '../code/background-drawer';
 import { Character } from '../types/character';
 import getRandomArrayElement from '../code/get-random-array-element';
-import { BackgroundType } from '../types/background-type.d.ts';
+import { BackgroundTypes } from '../code/background-type';
 import Clipper from '../code/clipper';
 import ColorSet from '../code/color-set';
 
@@ -17,7 +17,7 @@ export default {
 			characterDrawer: new CharacterDrawer(),
 			backgroundDrawer: new BackgroundDrawer(),
 			isCircle: false,
-			backgroundType: BackgroundType.solid,
+			backgroundType: BackgroundTypes.solid,
 			backgroundColor: '',
 			clipper: new Clipper(),
 		}
@@ -45,29 +45,30 @@ export default {
 
 		getRandomBackgroundType() {
 			const backgrounds = [
-				BackgroundType.boom,
-				BackgroundType.solid,
-				BackgroundType.pattern,
+				BackgroundTypes.boom,
+				BackgroundTypes.solid,
+				BackgroundTypes.pattern,
 			];
 
 			return getRandomArrayElement(backgrounds);
 		},
 
 		getRandomColor() {
-			const colorArray: string[] = Object.entries(ColorSet.color).map((keyAndValue) => keyAndValue[1]);
+			const valueIndex = 1;
+			const colorArray: string[] = Object.entries(ColorSet.color).map((keyAndValue) => keyAndValue[valueIndex]);
 			return getRandomArrayElement(colorArray);
 		},
 
 		drawBackground() {
 			if (this.avatarContext) {
 				switch (this.backgroundType) {
-					case BackgroundType.boom:
+					case BackgroundTypes.boom:
 						this.backgroundDrawer.drawBoom(this.avatarContext);
 						break;
-					case BackgroundType.pattern:
+					case BackgroundTypes.pattern:
 						this.backgroundDrawer.drawFourColorBackgroundAndCirclePattern(this.avatarContext);
 						break;
-					case BackgroundType.solid:
+					case BackgroundTypes.solid:
 						this.backgroundColor = this.backgroundDrawer.fillSolid(this.avatarContext, this.backgroundColor)
 						break;
 				}

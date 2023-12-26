@@ -1,4 +1,4 @@
-export enum  BackgroundType {
+export enum BackgroundTypes {
     solid = 'solid',
     pattern = 'pattern',
     boom = 'boom',

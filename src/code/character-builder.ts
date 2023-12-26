@@ -21,7 +21,10 @@ export default class CharacterBuilder {
         const imageLoader = new ImageLoader();
 
         return Promise.all(
-            Object.entries(character).map(([key, value]) => imageLoader.loadImage(value)),
+            Object.entries(character).map((keyAndValue) => {
+                const valueIndex = 1;
+                return imageLoader.loadImage(keyAndValue[valueIndex]);
+            })
         ).then((characterAssets) => {
             const [
                 body,
