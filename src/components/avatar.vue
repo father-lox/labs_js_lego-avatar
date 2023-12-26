@@ -5,6 +5,8 @@ import BackgroundDrawer from '../code/background-drawer';
 import { Character } from '../types/character';
 import getRandomArrayElement from '../code/get-random-array-element';
 import { BackgroundType } from '../types/background-type.d.ts';
+import Clipper from '../code/clipper';
+import ColorSet from '../code/color-set';
 
 export default {
 	data() {
@@ -14,9 +16,10 @@ export default {
 			characterBuilder: new CharacterBuilder(),
 			characterDrawer: new CharacterDrawer(),
 			backgroundDrawer: new BackgroundDrawer(),
-			isCircle: true,
+			isCircle: false,
 			backgroundType: BackgroundType.solid,
-			backgroundColor: ''
+			backgroundColor: '',
+			clipper: new Clipper(),
 		}
 	},
 
@@ -24,50 +27,40 @@ export default {
 		generateAvatar() {
 			this.characterBuilder.buildRandomCharacter().then((character) => {
 				this.character = character;
+				this.backgroundType = this.getRandomBackgroundType();
+				this.backgroundColor = this.getRandomColor();
+
 				this.draw();
 			});
 		},
 
-		draw(isRedraw: boolean = false) {
-			if (this.avatarContext !== null) {
+		draw() {
+			if (this.avatarContext !== null && this.character !== null) {
 				this.avatarContext.clearRect(0, 0, this.avatarContext.canvas.width, this.avatarContext.canvas.height);
 
-				if (this.isCircle) {
-					this.avatarContext.save();
-					this.cropImage();
-				}
-
-				if (isRedraw) {
-					this.setBackground(this.backgroundType, this.backgroundColor);
-					this.characterDrawer.drawCharacter(this.avatarContext, this.character as Character<HTMLImageElement>);
-				} else {
-					this.setRandomBackground();
-					this.characterDrawer.drawCharacter(this.avatarContext, this.character as Character<HTMLImageElement>);
-				}
-
-				if (this.isCircle) {
-					this.avatarContext.restore();
-				}
+				this.drawBackground();
+				this.characterDrawer.drawCharacter(this.avatarContext, this.character);
 			}
 		},
 
-		setRandomBackground() {
-			if (this.avatarContext) {
-				const backgrounds = [
-					BackgroundType.boom,
-					BackgroundType.solid,
-					BackgroundType.pattern,
-				];
+		getRandomBackgroundType() {
+			const backgrounds = [
+				BackgroundType.boom,
+				BackgroundType.solid,
+				BackgroundType.pattern,
+			];
 
-				this.setBackground(getRandomArrayElement(backgrounds));
-			}
+			return getRandomArrayElement(backgrounds);
 		},
 
-		setBackground(backgroundType: BackgroundType, solidColor?: string) {
-			if (this.avatarContext) {
-				this.backgroundType = backgroundType;
+		getRandomColor() {
+			const colorArray: string[] = Object.entries(ColorSet.color).map((keyAndValue) => keyAndValue[1]);
+			return getRandomArrayElement(colorArray);
+		},
 
-				switch (backgroundType) {
+		drawBackground() {
+			if (this.avatarContext) {
+				switch (this.backgroundType) {
 					case BackgroundType.boom:
 						this.backgroundDrawer.drawBoom(this.avatarContext);
 						break;
@@ -75,7 +68,7 @@ export default {
 						this.backgroundDrawer.drawFourColorBackgroundAndCirclePattern(this.avatarContext);
 						break;
 					case BackgroundType.solid:
-						this.backgroundColor = this.backgroundDrawer.fillSolid(this.avatarContext, solidColor)
+						this.backgroundColor = this.backgroundDrawer.fillSolid(this.avatarContext, this.backgroundColor)
 						break;
 				}
 			}
@@ -83,27 +76,20 @@ export default {
 
 		saveImage() {
 			if (this.avatarContext !== null) {
+				if (this.isCircle) {
+					this.clipper.clipCircle(this.avatarContext);
+				}
+
 				(this.$refs.downloadButton as HTMLLinkElement).href = this.avatarContext.canvas.toDataURL('image/png', 1);
-			}
-		},
 
-		cropImage() {
-			if (this.avatarContext !== null) {
-				const canvasWidth = this.avatarContext.canvas.width;
-				const canvasHeight = this.avatarContext.canvas.height
-				const canvasCenterX = canvasWidth / 2;
-				const canvasCenterY = canvasHeight / 2;
-				const radius = Math.min(canvasWidth, canvasHeight) / 2;
-
-				this.avatarContext.beginPath();
-				this.avatarContext.arc(canvasCenterX, canvasCenterY, radius, 0, Math.PI * 2, true);
-				this.avatarContext.clip();
+				if (this.isCircle) {
+					this.draw();
+				}
 			}
 		},
 
 		switchAvatarFormat() {
 			this.isCircle = !this.isCircle;
-			this.draw(true);
 		}
 	},
 

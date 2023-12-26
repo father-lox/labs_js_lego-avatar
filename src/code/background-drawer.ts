@@ -1,11 +1,11 @@
 import BackgroundFiller from "./background-filler"
-import getRandomArrayElement from "./get-random-array-element";
+import ColorSet from "./color-set";
 
 export default class BackgroundDrawer {
     drawFourColorBackgroundAndCirclePattern(ctx: CanvasRenderingContext2D) {
         const colors = [
-            [this.colorWayBeyondTheBlue, this.colorMilitantVegan],
-            [this.colorFerocious, this.colorLemonTart],
+            [ColorSet.color.wayBeyondTheBlue, ColorSet.color.militantVegan],
+            [ColorSet.color.ferocious, ColorSet.color.lemonTart],
         ];
         const countCircles = 4;
         const circleRadius = 32.5;
@@ -16,15 +16,11 @@ export default class BackgroundDrawer {
     }
 
     drawBoom(ctx: CanvasRenderingContext2D) {
-        this.fillSolid(ctx, this.colorCandyGrapeFizz);
-        this.backgroundFiller.drawExplosion(ctx, this.colorKilimanjaro, this.colorLemonTart, this.colorFerocious);
+        this.fillSolid(ctx, ColorSet.color.candyGrapeFizz);
+        this.backgroundFiller.drawExplosion(ctx, ColorSet.color.kilimanjaro, ColorSet.color.lemonTart, ColorSet.color.ferocious);
     }
 
-    fillSolid(ctx: CanvasRenderingContext2D, color?: string) {
-        if (color === undefined) {
-            color = getRandomArrayElement(this.colors);
-        }
-
+    fillSolid(ctx: CanvasRenderingContext2D, color: string) {
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         
@@ -32,24 +28,4 @@ export default class BackgroundDrawer {
     }
 
     private backgroundFiller = new BackgroundFiller();
-
-    private colorFruityLicious: string = '#FC8F8F' //Pink
-    private colorWayBeyondTheBlue: string = '#1776CF' //Blue
-    private colorMilitantVegan: string = '#1C974D' //Green
-    private colorFerocious: string = '#E22525' //Red
-    private colorLemonTart: string = '#FFDD65' //Yellow
-    private colorCandyGrapeFizz: string = '#985CFA' //Purple
-    private colorKilimanjaro: string = '#383434' //Black
-    private colorJitteryJade: string = '#76EBC8'
-
-    private colors: string[] = [
-        this.colorFruityLicious,
-        this.colorWayBeyondTheBlue,
-        this.colorMilitantVegan,
-        this.colorFerocious,
-        this.colorLemonTart,
-        this.colorCandyGrapeFizz,
-        this.colorKilimanjaro,
-        this.colorJitteryJade
-    ]
 }
